@@ -29,11 +29,12 @@ data = {
 print('Нажмите T, чтобы открыть список задач\n' + 'Нажмите C, чтобы открыть календарь\n')
 
 # Вывод списка задач:
-k = 1
 if input() == 'T':
+    k = 1
     for json_file in os.listdir('tasks'):
         file_path = os.path.join('tasks', json_file)
         with open(file_path, 'r', encoding='utf-8') as task:
             data = json.load(task)
             print(f'{k}.', data.get('name'))
         k += 1
+    print('Введите номер задачи, чтобы открыть подробнее\n')
