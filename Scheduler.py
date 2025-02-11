@@ -1,15 +1,16 @@
 import json
 import os
 from datetime import datetime
+import rich
 
 def create_json_file(filename, data):
     f_path = "tasks"
-    fi_path = os.path.join(f_path, filename)
+    file_path = os.path.join(f_path, filename)
 
-    with open(fi_path, "w", encoding="utf-8") as json_file:
+    with open(file_path, "w", encoding="utf-8") as json_file:
         json.dump(data, json_file, indent=4, ensure_ascii=False)
-    
-    print(f"FILE CREATED: {fi_path}")
+
+    print(f"FILE CREATED: {file_path}")
 
 data = {
     "tag": "хотелки денчика",
@@ -23,4 +24,16 @@ data = {
     "color": "red"
 }
 
-create_json_file("task.json", data)
+# create_json_file("task.json", data)
+
+print('Нажмите T, чтобы открыть список задач\n' + 'Нажмите C, чтобы открыть календарь\n')
+
+# Вывод списка задач:
+k = 1
+if input() == 'T':
+    for json_file in os.listdir('tasks'):
+        file_path = os.path.join('tasks', json_file)
+        with open(file_path, 'r', encoding='utf-8') as task:
+            data = json.load(task)
+            print(f'{k}.', data.get('name'))
+        k += 1
