@@ -11,15 +11,16 @@ from rich.panel import Panel
 console = Console()
 builtins.print = console.print
 
-def create_json_file(filename, data):
-    file_path = os.path.join('tasks', filename)
+def create_json_file(filename, data, directory):
+    file_path = os.path.join(directory, filename)
 
     with open(file_path, "w", encoding="utf-8") as json_file:
         json.dump(data, json_file, indent=4, ensure_ascii=False)
 
     print(f'FILE CREATED: {file_path}')
 
-def CheckDeadlines():
+
+def check_deadlines():
     for json_file in os.listdir('tasks'):
             file_path = os.path.join('tasks', json_file)
             with open(file_path, 'r', encoding='utf-8') as task:
@@ -30,6 +31,24 @@ def CheckDeadlines():
                 nowTime = datetime.strptime(nowTimeStr, '%Y-%m-%d %H:%M:%S')
                 if deadlineTime < nowTime:
                     print(':exclamation::exclamation::exclamation: [white on red] У ВАС ПРОСРОЧЕН ДЕДЛАААААЙН [/]')
+
+
+# Создание новой задачи, ПОПРАВИТЬ ПОВТОРЫ ЗАДАЧИ
+def create_new_task(directory):
+    data = dict()
+    data['name'] = input('Название:\n')
+    data['tag'] = input('Тег:\n')
+    data['description'] = input('Описание:\n')
+    data['task_begin'] = input('Время начала:\n')
+    data['deadline'] = input('Дедлайн:\n')
+    data['priority'] = input('Приоритет (1-3):\n')
+    if input('Повторять (ДА или НЕТ):\n').lower() == 'да':
+        data['repetition'] = True
+        data['repetition_cooldown'] = input('Частота повтора:\n')
+    data['color'] = input('Цвет:\n')
+    lastJson = os.listdir(directory)[-1]
+    taskNumber = int(lastJson[4:-5]) + 1
+    create_json_file('task' + str(taskNumber) + '.json', data, directory)
 
 # CheckDeadlines()
 
@@ -57,32 +76,24 @@ while True:
                 task_deadline = data.get('deadline', 'N/A')
                 task_color = data.get('color', 'white')
 
-                table.add_row(str(f'[{task_color}]{k}[/]'), task_name, task_deadline)
+                table.add_row(str(f'[{task_color}]{k}[/]'), f'[{task_color}]{task_name}[/]', task_deadline.replace("T", " ").replace("Z", " "))
                 k += 1
 
         print(table)
 
         print('\nВведите номер задачи, чтобы открыть подробнее')
         print('[N] - создать новую задачу')
+        print('[D] - создать новый черновик')
         print('[Back] - вернуться назад')
 
 # Создание новой задачи, ПОПРАВИТЬ ПОВТОРЫ ЗАДАЧИ
         command = input().lower()
         if command == 'n':
-            data = dict()
-            data['name'] = input('Название:\n')
-            data['tag'] = input('Тег:\n')
-            data['description'] = input('Описание:\n')
-            data['task_begin'] = input('Время начала:\n')
-            data['deadline'] = input('Дедлайн:\n')
-            data['priority'] = input('Приоритет (1-3):\n')
-            if input('Повторять (ДА или НЕТ):\n') == 'ДА':
-                data['repetition'] = True
-                data['repetition_cooldown'] = input('Частота повтора:\n')
-            data['color'] = input('Цвет:\n')
-            lastJson = os.listdir('tasks')[-1]
-            taskNumber = int(lastJson[4:-5]) + 1
-            create_json_file('task' + str(taskNumber) + '.json', data)
+            create_new_task('tasks')
+
+# Создание черновика
+        elif command == 'd':
+            create_new_task('drafts')
 
 # Вывод подробного описания задачи:
         elif command.isdigit():
@@ -104,13 +115,13 @@ while True:
                 table.add_row("6", "Приоритет", str(data["priority"]))
                 if data.get("repetition"):
                     table.add_row("7", "Повторение", f"Каждые {data['repetition_cooldown']} дней")
-                table.add_row("8", "Цвет", f"[{data["color"]}]{data["color"]}[/]")
+                table.add_row("8", "Цвет", f"[{data['color']}]{data['color']}[/]")
                 print(table)
-
+                
                 print('Нажмите [R] чтобы отметить как выполненное')
-                print('Нажмите [E] чтобы редактировать')
-                print('Нажмите [red][D][/] чтобы удалить')
-                print('Нажмите [BACK] чтобы выйти')
+                print('Нажмите [E], чтобы редактировать')
+                print('Нажмите [red][D][/], чтобы удалить')
+                print('Нажмите [BACK], чтобы выйти')
 
             command2 = input().lower()
 
