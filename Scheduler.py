@@ -1,8 +1,13 @@
+import builtins
+
 import json
 import os
 # from datetime import datetime
 # import rich
+from rich.console import Console
 
+console = Console()
+builtins.print = console.print
 
 def create_json_file(filename, data):
     file_path = os.path.join('tasks', filename)
@@ -26,8 +31,11 @@ while True:
             file_path = os.path.join('tasks', json_file)
             with open(file_path, 'r', encoding='utf-8') as task:
                 data = json.load(task)
-                print(f'[{k}].', data.get('name'))
+                task_name = data.get('name')
+                task_color = data.get('color', 'white')
+                console.print(f"[{task_color}][{k}][/] {task_name}")
             k += 1
+
         print('\nВведите номер задачи, чтобы открыть подробнее')
         print('[N] - создать новую задачу')
         print('[Back] - вернуться назад')
