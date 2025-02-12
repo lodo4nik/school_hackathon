@@ -106,10 +106,11 @@ while True:
                     table.add_row("7", "Повторение", f"Каждые {data['repetition_cooldown']} дней")
                 table.add_row("8", "Цвет", f"[{data["color"]}]{data["color"]}[/]")
                 print(table)
-                
-                print('Нажмите [red][D][/], чтобы удалить')
-                print('Нажмите [blue][E][/], чтобы редактировать')
-                print('Нажмите [BACK], чтобы выйти')
+
+                print('Нажмите [R] чтобы отметить как выполненное')
+                print('Нажмите [E] чтобы редактировать')
+                print('Нажмите [red][D][/] чтобы удалить')
+                print('Нажмите [BACK] чтобы выйти')
 
             command2 = input().lower()
 
