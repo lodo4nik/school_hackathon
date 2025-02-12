@@ -30,7 +30,7 @@ def CheckDeadlines():
                 if deadlineTime < nowTime:
                     print(':exclamation::exclamation::exclamation: [white on red] У ВАС ПРОСРОЧЕН ДЕДЛАААААЙН [/]')
 
-CheckDeadlines()
+# CheckDeadlines()
 
 while True:
     print('Нажмите [T], чтобы открыть список задач')
@@ -38,7 +38,7 @@ while True:
     print('Нажмите [E], чтобы выйти')
     command1 = input().lower()
 
-    # Вывод списка задач:
+# Вывод списка задач:
     if command1 == 't':
         console = Console()
         table = Table(title="===== Задачи =====", expand=True)
@@ -65,7 +65,7 @@ while True:
         print('[N] - создать новую задачу')
         print('[Back] - вернуться назад')
 
-        # Создание новой задачи, ПОПРАВИТЬ ПОВТОРЫ ЗАДАЧИ
+# Создание новой задачи, ПОПРАВИТЬ ПОВТОРЫ ЗАДАЧИ
         command = input().lower()
         if command == 'n':
             data = dict()
@@ -83,35 +83,64 @@ while True:
             taskNumber = int(lastJson[4:-5]) + 1
             create_json_file('task' + str(taskNumber) + '.json', data)
 
+# Вывод подробного описания задачи:
         elif command.isdigit():
             task_number = os.listdir('tasks')[int(command) - 1]
             file_path = os.path.join('tasks', task_number)
 
             with open(file_path, 'r+', encoding='utf-8') as data:
                 data = json.load(data)
-                print('Задача:', data['name'])
-                print('Тег:', data['tag'])
-                print('Описание:', data['description'])
-                print('Время начала:', (data['task_begin']).replace("T", " ").replace("Z", " "))
-                print('Дедлайн:', data['deadline'].replace("T", " ").replace("Z", " "))
-                print('Приоритет:', data['priority'])
+                print('[1]Название:', data['name'])
+                print('[2]Тег:', data['tag'])
+                print('[3]Описание:', data['description'])
+                print('[4]Время начала:', (data['task_begin']).replace("T", " ").replace("Z", " "))
+                print('[5]Дедлайн:', data['deadline'].replace("T", " ").replace("Z", " "))
+                print('[6]Приоритет:', data['priority'])
                 if data['repetition'] is True:
-                    print(f'Повторять каждые {data["repetition_cooldown"]} дней')
-                print('Цвет:', data['color'], '\n')
+                    print(f'[7]Повторять каждые {data["repetition_cooldown"]} дней')
+                print('[8]Цвет:', data['color'], '\n')
                 
                 print('Нажмите [red][D][/], чтобы удалить')
                 print('Нажмите [blue][E][/], чтобы редактировать')
                 print('Нажмите [BACK], чтобы выйти')
-                
+
             command2 = input().lower()
-            if command2 == 'd':
+
+            # Удаление задачи:
+            if command2 == 'd': 
                 os.remove(file_path)
                 print('Задача удалена\n')
             
-            # elif command2 == 'e':
-            
-                
-            
+            # Изменение задачи:
+            elif command2 == 'e':
+                n = input('Номер параметра, который хотите изменить: ')
+                while n.lower() != 'back':
+                    with open(file_path, 'r+', encoding='utf-8') as data:
+                        data = json.load(data)
+                        if n == '1':
+                            data['name'] = input('Название:\n')
+                        elif n == '2':
+                            data['tag'] = input('Тег:\n')
+                        elif n == '3':
+                            data['description'] = input('Описание:\n')
+                        elif n == '4':
+                            data['task_begin'] = input('Время начала:\n')
+                        elif n == '5':
+                            data['deadline'] = input('Дедлайн:\n')
+                        elif n == '6':
+                            data['priority'] = input('Приоритет (1-3):\n')
+                        elif n == '7':
+                            if input('Повторять (ДА или НЕТ):\n') == 'ДА':
+                                data['repetition'] = True
+                                data['repetition_cooldown'] = input('Частота повтора:\n')
+                        elif n == '8':
+                            data['color'] = input('Цвет:\n')
+                        
+                        print('Введите [BACK] чтобы выйти')
+                        n = input('Номер параметра, который хотите изменить: ')
+                create_json_file(task_number, data)
+
+
             elif command2 == 'back':
                 continue
 
