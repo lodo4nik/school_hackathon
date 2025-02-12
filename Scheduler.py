@@ -6,6 +6,7 @@ from datetime import datetime
 # import rich
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
 
 console = Console()
 builtins.print = console.print
@@ -44,8 +45,8 @@ while True:
         table = Table(title="===== Задачи =====", expand=True)
 
         table.add_column("№", justify="right")
-        table.add_column("Название", style="white")
-        table.add_column("Дедлайн", justify="left", style="green")
+        table.add_column("Название")
+        table.add_column("Дедлайн", style="green")
 
         k = 1
         for json_file in os.listdir('tasks'):
@@ -90,15 +91,21 @@ while True:
 
             with open(file_path, 'r+', encoding='utf-8') as data:
                 data = json.load(data)
-                print('[1]Название:', data['name'])
-                print('[2]Тег:', data['tag'])
-                print('[3]Описание:', data['description'])
-                print('[4]Время начала:', (data['task_begin']).replace("T", " ").replace("Z", " "))
-                print('[5]Дедлайн:', data['deadline'].replace("T", " ").replace("Z", " "))
-                print('[6]Приоритет:', data['priority'])
-                if data['repetition'] is True:
-                    print(f'[7]Повторять каждые {data["repetition_cooldown"]} дней')
-                print('[8]Цвет:', data['color'], '\n')
+                table = Table(title=f"===== [1] {data['name']} =====", expand=True)
+                table.add_column("№", justify="right")
+                table.add_column("Параметр")
+                table.add_column("Значение")
+
+                table.add_row("1", "Название", data["name"])
+                table.add_row("2", "Тег", data["tag"])
+                table.add_row("3", "Описание", data["description"])
+                table.add_row("4", "Время начала", data["task_begin"].replace("T", " ").replace("Z", " "))
+                table.add_row("5", "Дедлайн", data["deadline"].replace("T", " ").replace("Z", " "))
+                table.add_row("6", "Приоритет", str(data["priority"]))
+                if data.get("repetition"):
+                    table.add_row("7", "Повторение", f"Каждые {data['repetition_cooldown']} дней")
+                table.add_row("8", "Цвет", f"[{data["color"]}]{data["color"]}[/]")
+                print(table)
                 
                 print('Нажмите [red][D][/], чтобы удалить')
                 print('Нажмите [blue][E][/], чтобы редактировать')
