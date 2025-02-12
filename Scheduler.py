@@ -117,6 +117,10 @@ while True:
             if command2 == 'd': 
                 os.remove(file_path)
                 print('Задача удалена\n')
+                
+            # Отметка как выполненное:
+            elif command2 == 'r':
+                shutil.move(file_path, 'done')
             
             # Изменение задачи:
             elif command2 == 'e':
