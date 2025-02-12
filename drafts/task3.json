@@ -1,0 +1,12 @@
+{
+    "tag": "Мамины просьбы",
+    "name": "Сходить за хлебом",
+    "description": "Не вернуться (в планах)",
+    "task_begin": "",
+    "deadline": "",
+    "priority": 0,
+    "repetition": false,
+    "repetition_cooldown": 0,
+    "color": "blue",
+    "done": false
+  }
