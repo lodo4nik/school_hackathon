@@ -2,7 +2,7 @@ import builtins
 
 import json
 import os
-# from datetime import datetime
+from datetime import datetime
 # import rich
 from rich.console import Console
 
@@ -67,8 +67,8 @@ while True:
                 print('Задача:', data['name'])
                 print('Тег:', data['tag'])
                 print('Описание:', data['description'])
-                print('Врем начала:', data['task_begin'])
-                print('Дедлайн:', data['deadline'])
+                print('Врем начала:', (data['task_begin']).replace("T", " ").replace("Z", " "))
+                print('Дедлайн:', data['deadline'].replace("T", " ").replace("Z", " "))
                 print('Приоритет:', data['priority'])
                 if data['repetition'] is True:
                     print(f'Повторять каждые {data["repetition_cooldown"]} дней')
