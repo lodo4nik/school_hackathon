@@ -3,9 +3,10 @@
     "name": "Сдать проект",
     "description": "Сдать заявку на инженеры будущего чтоб денчик не убил своим пузом",
     "task_begin": "2025-02-10T12:00:00Z",
-    "deadline": "2025-02-14T19:00:00Z",
+    "deadline": "2025-02-09T19:00:00Z",
     "priority": 2,
     "repetition": true,
     "repetition_cooldown": 1,
-    "color": "red"
+    "color": "red",
+    "done": false
 }

@@ -7,5 +7,6 @@
   "priority": 1,
   "repetition": false,
   "repetition_cooldown": 0,
-  "color": "blue"
+  "color": "blue",
+  "done": false
 }
