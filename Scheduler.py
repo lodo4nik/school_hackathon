@@ -38,3 +38,21 @@ if input() == 'T':
             print(f'{k}.', data.get('name'))
         k += 1
     print('Введите номер задачи, чтобы открыть подробнее\n')
+
+# Создание новой задачи, ПОПРАВИТЬ ПОВТОРЫ ЗАДАЧИ
+
+    if input() == 'N':
+        data = dict()
+        data['name'] = input('Название:\n')
+        data['tag'] = input('Тег:\n')
+        data['description'] = input('Описание:\n')
+        data['task_begin'] = input('Время начала:\n')
+        data['deadline'] = input('Дедлайн:\n')
+        data['priority'] = input('Приоритет (1-3):\n')
+        if input('Повторять (ДА или НЕТ):\n') == 'ДА':
+            data['repetition'] = True
+            data['repetition_cooldown'] = input('Частота повтора:\n')
+        data['color'] = input('Цвет:\n)')
+
+        create_json_file("task.json", data)
+
