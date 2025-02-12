@@ -1,0 +1,12 @@
+{
+  "tag": "ДЗ на среду",
+  "name": "Написать злостную гиперматику",
+  "description": "мамаааааааа",
+  "task_begin": "2025-02-12T12:00:00Z",
+  "deadline": "2025-02-12T19:00:00Z",
+  "priority": 1,
+  "repetition": false,
+  "repetition_cooldown": 0,
+  "color": "blue",
+  "done": true
+}
