@@ -23,7 +23,10 @@ def create_json_file(filename, data, directory):
 def check_deadlines():
     for json_file in os.listdir('tasks'):
             file_path = os.path.join('tasks', json_file)
+            flag = False
+            fp = ''
             with open(file_path, 'r+', encoding='utf-8') as task:
+                fp = file_path
                 data = json.load(task)
                 deadlineTimeStr = data.get('deadline').replace('T', ' ').replace('Z', '')
                 deadlineTime = datetime.strptime(deadlineTimeStr, '%Y-%m-%d %H:%M:%S')
@@ -33,10 +36,15 @@ def check_deadlines():
                     print(':exclamation::exclamation::exclamation: [white on red] У ВАС ПРОСРОЧЕН ДЕДЛАААААЙН [/]')
                     command = input('Вы выполнили задачу? Да/Нет: ').lower()
                     if command == 'да':
+                        flag = True
                         data['done'] = 'true'
                         print(data)
                         with open(file_path, 'w', encoding='utf-8') as task1:
-                            json.dump(data, task1, ensure_ascii=False)
+                            json.dump(data, task1, ensure_ascii=False, indent=2)
+                        task1.close()
+            task.close()
+            if flag == True:
+                shutil.move(fp, 'done')
 
 check_deadlines()
 # Создание новой задачи, ПОПРАВИТЬ ПОВТОРЫ ЗАДАЧИ
