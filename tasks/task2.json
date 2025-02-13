@@ -8,5 +8,5 @@
   "repetition": false,
   "repetition_cooldown": 0,
   "color": "blue",
-  "done": true
+  "done": "false"
 }
