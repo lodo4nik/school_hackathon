@@ -5,5 +5,6 @@
     "task_begin": "2025-02-14T12:00:00Z",
     "deadline": "2025-02-16T12:00:00Z",
     "priority": "2",
-    "color": "green"
+    "color": "green",
+    "done": "false"
 }
