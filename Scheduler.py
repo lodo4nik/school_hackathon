@@ -126,7 +126,12 @@ def create_new_task(directory):
     taskNumber = int(lastJson[4:-5]) + 1
     create_json_file('task' + str(taskNumber) + '.json', data, directory)
 
-    command1 = input().lower()
+# ДЕТАЛЬНАЯ ИНФА ПО ЗАДАЧЕ
+def open_task_detail(task_file):
+    file_path = os.path.join('tasks', task_file)
+    with open(file_path, 'r+', encoding='utf-8') as f:
+        data = json.load(f)
+    table = Table(title=f"===== [1] {data['name']} =====", expand=True)
     table.add_column("№", justify="right")
     table.add_column("Параметр")
     table.add_column("Значение")
