@@ -19,6 +19,14 @@ def create_json_file(filename, data, directory):
         json.dump(data, json_file, indent=4, ensure_ascii=False)
     print(f'FILE CREATED: {file_path}')
 
+def delta_time(time1, time2):
+    dTime = time2 - time1
+    dTimeStr = str(dTime).replace('days', 'дней').replace('day', 'день')
+    if dTime.days < 0:
+        return('Просрочено на ' + dTimeStr[1:])
+    else:
+        return(dTimeStr)
+
 # ПРОВЕРКА ДЕДЛАЙНОВ, я ниче не менял мне страшно вообще сюда заходить
 def check_deadlines():
     for json_file in os.listdir('tasks'):
@@ -33,7 +41,7 @@ def check_deadlines():
             deadlineTime = datetime.strptime(deadlineTimeStr, '%Y-%m-%d %H:%M:%S')
             nowTimeStr = str(datetime.now())[:-7]
             nowTime = datetime.strptime(nowTimeStr, '%Y-%m-%d %H:%M:%S')
-            if deadlineTime < nowTime:
+            if deadlineTime < nowTime and data.get('done') == 'false':
                 command = Prompt.ask(f'[white on red] Просрочен дедлайн -> [/] [red]{taskName}[/] | Вы выполнили задачу? Да/Нет').lower()
                 if command == 'да':
                     flag = True
@@ -120,6 +128,9 @@ def create_new_task(directory):
     if input('Повторять (ДА или НЕТ):\n').lower() == 'да':
         data['repetition'] = True
         data['repetition_cooldown'] = input('Частота повтора:\n')
+    else:
+        data['repetition'] = False
+        data['repetition_cooldown'] = 0
     data['color'] = input('Цвет:\n')
     lastJson = os.listdir(directory)[-1]
     taskNumber = int(lastJson[4:-5]) + 1
@@ -166,7 +177,6 @@ def open_task_detail(task_file):
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 data1 = None
-                del data['done']
                 if data['repetition'] == False:
                     data1 = {'name':data['name'], 'tag':data['tag'], 'description':data['description'], 'task_begin':data['task_begin'], 'deadline':data['deadline'], 'priority':data['priority'], 'color':data['color']}
                 else:
@@ -190,23 +200,37 @@ def tasks_menu():
         table.add_column("№", justify="right")
         table.add_column("Название")
         table.add_column("Дедлайн", style="green")
+        table.add_column("Осталось времени")
         task_files = os.listdir('tasks')
         if not task_files:
             print("Нет задач")
-        k = 1
+        
+        datas = []
         for task_file in task_files:
             file_path = os.path.join('tasks', task_file)
             with open(file_path, 'r', encoding='utf-8') as task:
-                data = json.load(task)
-                task_name = data.get('name')
-                task_deadline = data.get('deadline', 'N/A')
-                task_color = data.get('color', 'white')
-                task_status = data.get('done', 'false')
-                if task_status == "true":
-                    table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline.replace("T", " ").replace("Z", " "), style="strike")
-                else:
-                    table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline.replace("T", " ").replace("Z", " "))
+                datas.append(json.load(task))
+        sorted_data = sorted(datas, key=lambda x: x['tag'])
+        k = 1
+        prevTag = ''
+        for data in sorted_data:
+            task_tag = data['tag']
+            es = True
+            if task_tag == prevTag:
+                es = False
+            task_name = data['name']
+            task_deadline = data['deadline'].replace("T", " ").replace("Z", " ")[:-1]
+            task_color = data['color']
+            task_status = data['done']
+            if task_status == "true":
+                table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline, style="strike", end_section=es)
+            else:
+                deadlineTime = datetime.strptime(task_deadline, '%Y-%m-%d %H:%M:%S')
+                nowTimeStr = str(datetime.now())[:-7]
+                nowTime = datetime.strptime(nowTimeStr, '%Y-%m-%d %H:%M:%S')
+                table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline, delta_time(nowTime, deadlineTime), end_section=es)
             k += 1
+            prevTag = task_tag
         print(table)
         print(f'[bold]Введите номер задачи, чтобы открыть подробнее [/]\n')
         print('[N] - создать новую задачу')
