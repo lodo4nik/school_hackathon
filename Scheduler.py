@@ -68,7 +68,6 @@ def show_calendar():
         file_path = os.path.join('tasks', json_file)
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-
             task_begin = data.get('task_begin', '')
             deadline = data.get('deadline', '')
             color = data.get('color', 'white')
@@ -143,7 +142,9 @@ def open_task_detail(task_file):
     table.add_row("6", "Приоритет", str(data["priority"]))
     if data.get("repetition"):
         table.add_row("7", "Повторение", f"Каждые {data['repetition_cooldown']} дней")
-    table.add_row("8", "Цвет", f"[{data['color']}]{data['color']}[/]")
+        table.add_row("8", "Цвет", f"[{data['color']}]{data['color']}[/]")
+    else:
+        table.add_row("7", "Цвет", f"[{data['color']}]{data['color']}[/]")
     print(table)
     print('Нажмите [R] чтобы отметить как выполненное')
     print('Нажмите [E], чтобы редактировать')
@@ -159,31 +160,25 @@ def open_task_detail(task_file):
         with open(file_path, 'w', encoding='utf-8') as task1:
             json.dump(data, task1, ensure_ascii=False, indent=2)
     elif command == 'e':
-        n = input('Номер параметра, который хотите изменить: ')
+        n = input('Номер параметра, который хотите изменить или [Back] чтобы вернутся назад: ')
+        
         while n.lower() != 'back':
-            with open(file_path, 'r+', encoding='utf-8') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            if n == '1':
-                data['name'] = input('Название:\n')
-            elif n == '2':
-                data['tag'] = input('Тег:\n')
-            elif n == '3':
-                data['description'] = input('Описание:\n')
-            elif n == '4':
-                data['task_begin'] = input('Время начала:\n')
-            elif n == '5':
-                data['deadline'] = input('Дедлайн:\n')
-            elif n == '6':
-                data['priority'] = input('Приоритет (1-3):\n')
-            elif n == '7':
-                if input('Повторять (ДА или НЕТ):\n').lower() == 'да':
-                    data['repetition'] = True
-                    data['repetition_cooldown'] = input('Частота повтора:\n')
-            elif n == '8':
-                data['color'] = input('Цвет:\n')
-            print('Введите [BACK] чтобы выйти')
-            n = input('Номер параметра, который хотите изменить: ')
-        create_json_file(task_file, data, 'tasks')
+                data1 = None
+                del data['done']
+                if data['repetition'] == False:
+                    data1 = {'name':data['name'], 'tag':data['tag'], 'description':data['description'], 'task_begin':data['task_begin'], 'deadline':data['deadline'], 'priority':data['priority'], 'color':data['color']}
+                else:
+                    data1 = data
+                key = list(data1.keys())[int(n) - 1]
+                param = input('Введите значение: ')
+                data[key] = param
+                f.close()
+                with open(file_path, 'w', encoding='utf-8') as f1:
+                    json.dump(data, f1, ensure_ascii=False, indent=2)
+                    f1.close()
+            n = input('Номер параметра, который хотите изменить или [Back] чтобы вернутся назад: ')
     elif command == 'back':
         return
 
@@ -213,7 +208,7 @@ def tasks_menu():
                     table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline.replace("T", " ").replace("Z", " "))
             k += 1
         print(table)
-        print('\nВведите номер задачи, чтобы открыть подробнее')
+        print(f'[bold]Введите номер задачи, чтобы открыть подробнее [/]\n')
         print('[N] - создать новую задачу')
         print('[D] - создать новый черновик')
         print('[Back] - вернуться в главное меню')
