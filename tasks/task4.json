@@ -1,0 +1,12 @@
+{
+    "name": "Сдать хакатон",
+    "tag": "По школе",
+    "description": "Сделать планировщик задач и защитить его",
+    "task_begin": "2025-02-10T12:00:00Z",
+    "deadline": "2025-02-15T12:00:00Z",
+    "priority": "3",
+    "done": "false",
+    "repetition": false,
+    "repetition_cooldown": 0,
+    "color": "yellow"
+}

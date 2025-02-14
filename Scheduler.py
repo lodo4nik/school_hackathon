@@ -25,7 +25,7 @@ def delta_time(time1, time2):
     if dTime.days < 0:
         return('Просрочено на ' + dTimeStr[1:])
     else:
-        return(dTimeStr)
+        return('🔥 ' + dTimeStr)
 
 # ПРОВЕРКА ДЕДЛАЙНОВ, я ниче не менял мне страшно вообще сюда заходить
 def check_deadlines():
@@ -125,6 +125,7 @@ def create_new_task(directory):
     data['task_begin'] = input('Время начала:\n')
     data['deadline'] = input('Дедлайн:\n')
     data['priority'] = input('Приоритет (1-3):\n')
+    data['done'] = "false"
     if input('Повторять (ДА или НЕТ):\n').lower() == 'да':
         data['repetition'] = True
         data['repetition_cooldown'] = input('Частота повтора:\n')
@@ -223,7 +224,7 @@ def tasks_menu():
             task_color = data['color']
             task_status = data['done']
             if task_status == "true":
-                table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline, style="strike", end_section=es)
+                table.add_row(f'[{task_color}]{k}[/]', f'[{task_color}]{task_name}[/]', task_deadline, '✅', style="strike", end_section=es)
             else:
                 deadlineTime = datetime.strptime(task_deadline, '%Y-%m-%d %H:%M:%S')
                 nowTimeStr = str(datetime.now())[:-7]
