@@ -55,9 +55,10 @@ def check_deadlines():
 # КАЛЕНДАРЬ
 def show_calendar():
     current_date = datetime.now()
-    current_year = current_date.year
+    current_year = current_date.year 
     current_month = current_date.month
     current_day = current_date.day
+# тут надо в идеале переделать все связанное с получением дней или исправить баг с отображением текущего дня
 
     first_day = datetime(current_year, current_month, 1)
     first_weekday = first_day.weekday()
