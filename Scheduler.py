@@ -122,8 +122,8 @@ def create_new_task(directory):
     data['name'] = input('Название:\n')
     data['tag'] = input('Тег:\n')
     data['description'] = input('Описание:\n')
-    data['task_begin'] = input('Время начала:\n')
-    data['deadline'] = input('Дедлайн:\n')
+    data['task_begin'] = input('Время начала [ГГГГ-ММ-ДД ЧЧ:ММ:СС]:\n')
+    data['deadline'] = input('Дедлайн [ГГГГ-ММ-ДД ЧЧ:ММ:СС]:\n')
     data['priority'] = input('Приоритет (1-3):\n')
     data['done'] = "false"
     if input('Повторять (ДА или НЕТ):\n').lower() == 'да':
